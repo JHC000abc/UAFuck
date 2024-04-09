@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Agent Collection Page</title>
+
+     <style>
+        h2 {
+            font-family: Arial, sans-serif;  /* 设置字体为Arial或sans-serif */
+            font-size: 24px;  /* 设置字体大小为24像素 */
+            font-weight: bold;  /* 设置字体加粗 */
+            color: yellow;  /* 设置字体颜色为深灰色 */
+        }
+        h3 {
+            font-family: Arial, sans-serif;  /* 设置字体为Arial或sans-serif */
+            font-weight: bold;  /* 设置字体加粗 */
+            color: red;  /* 设置字体颜色为深灰色 */
+        }
+    </style>
+
+</head>
+<body>
+    <script>
+        // 获取用户的 User-Agent
+        var userAgent = navigator.userAgent;
+
+        console.log("userAgent",userAgent);
+        // 发送 User-Agent 到服务器
+        function sendUserAgentToServer(userAgent) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://121.36.12.170:5000/upload?useragent=" + encodeURIComponent(userAgent), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("User agent sent successfully!");
+                    } else {
+                        console.error("Failed to send user agent. Status: " + xhr.status);
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+
+        // 更新页面上的用户代理信息
+        function updateUserAgentInfo(userAgent) {
+            var h1Element = document.querySelector("h2");
+            h1Element.textContent = userAgent;
+        }
+
+        // 页面加载时发送 User-Agent 到服务器并更新页面上的用户代理信息
+        window.onload = function() {
+            sendUserAgentToServer(userAgent);
+            updateUserAgentInfo(userAgent);
+        };
+    </script>
+
+    <h1>Your UserAgent is : </h1>
+    <br>
+    <h2></h2>
+    <br>
+    <br>
+    <h3>Collection Successful</h3>
+
+</body>
+</html>
