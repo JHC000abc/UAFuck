@@ -5,64 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Agent Collection Page</title>
 
-     <style>
+    <style>
         h2 {
-            font-family: Arial, sans-serif;  /* 设置字体为Arial或sans-serif */
-            font-size: 24px;  /* 设置字体大小为24像素 */
-            font-weight: bold;  /* 设置字体加粗 */
-            color: red;  /* 设置字体颜色为深灰色 */
+            font-family: Arial, sans-serif; /* 设置字体为Arial或sans-serif */
+            font-size: 24px; /* 设置字体大小为24像素 */
+            font-weight: bold; /* 设置字体加粗 */
+            color: red; /* 设置字体颜色为深灰色 */
         }
+
         h3 {
-            font-family: Arial, sans-serif;  /* 设置字体为Arial或sans-serif */
-            font-weight: bold;  /* 设置字体加粗 */
-            color: red;  /* 设置字体颜色为深灰色 */
+            font-family: Arial, sans-serif; /* 设置字体为Arial或sans-serif */
+            font-weight: bold; /* 设置字体加粗 */
+            color: red; /* 设置字体颜色为深灰色 */
         }
     </style>
 
 </head>
 <body>
-    <script>
-        // 获取用户的 User-Agent
-        var userAgent = navigator.userAgent;
+<script>
+    // 获取用户的 User-Agent
+    var userAgent = navigator.userAgent;
+    var ip = "111"
 
-        console.log("userAgent",userAgent);
-        // 发送 User-Agent 到服务器
-        function sendUserAgentToServer(userAgent) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/upload?useragent=" + encodeURIComponent(userAgent), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("User agent sent successfully!");
-                    } else {
-                        console.error("Failed to send user agent. Status: " + xhr.status);
-                    }
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('https://api.ipify.org?format=json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络请求失败');
                 }
-            };
+                return response.json();
+            })
+            .then(data => {
+                ip = data.ip;
+                console.log('客户端的 IP 地址是：', ip);
+            })
+            .catch(error => {
+                console.error('获取 IP 地址时出错：', error);
+            });
+    });
 
-            xhr.send();
-        }
-
-        // 更新页面上的用户代理信息
-        function updateUserAgentInfo(userAgent) {
-            var h1Element = document.querySelector("h2");
-            h1Element.textContent = userAgent;
-        }
-
-        // 页面加载时发送 User-Agent 到服务器并更新页面上的用户代理信息
-        window.onload = function() {
-            sendUserAgentToServer(userAgent);
-            updateUserAgentInfo(userAgent);
+    // 发送 User-Agent 到服务器
+    function sendUserAgentToServer(userAgent, ip) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/upload?useragent=" + encodeURIComponent(userAgent) + "&ip=" + encodeURIComponent(ip), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log("User agent sent successfully!");
+                } else {
+                    console.error("Failed to send user agent. Status: " + xhr.status);
+                }
+            }
         };
-    </script>
 
-    <h1>Your UserAgent is : </h1>
-    <br>
-    <h2></h2>
-    <br>
-    <br>
-    <h3>Thank You !!!</h3>
-    <h3>Collection Successful</h3>
+        xhr.send();
+    }
+
+    // 更新页面上的用户代理信息
+    function updateUserAgentInfo(userAgent) {
+        var h1Element = document.querySelector("h2");
+        h1Element.textContent = userAgent;
+    }
+
+    function updateIPInfo(ip) {
+        var h6Element = document.querySelector("h6");
+        h6Element.textContent = ip;
+    }
+
+    // 页面加载时发送 User-Agent 到服务器并更新页面上的用户代理信息
+    window.onload = function () {
+        sendUserAgentToServer(userAgent, ip);
+        updateUserAgentInfo(userAgent);
+        updateIPInfo(ip);
+    };
+</script>
+
+
+<h1>Your UserAgent is : </h1>
+<br>
+<h2></h2>
+<br>
+<br>
+<h3>Thank You !!!</h3>
+<h3>Collection Successful</h3>
+<center><h6></h6></center>
 
 </body>
 </html>

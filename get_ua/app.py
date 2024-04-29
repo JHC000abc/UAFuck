@@ -27,21 +27,27 @@ def index():
 @app.route('/upload',methods=['GET'])
 def upload():
     ua = request.args.get('useragent')
-    if ua:
+    ip = request.args.get('ip')
+    if ua and ip:
         db = DB()
         _format = "%Y-%m-%d %H-%M-%S"
         time_now = time.strftime(_format, time.localtime())
 
         info = {
             "ua":ua,
+            "ip":ip,
             "update_time":time_now,
             "create_time":time_now
         }
         try:
             result = db.add_data_for_model(UaSave, info)
-            return "Success"
+            return render_template("status.html",status="Success")
         except:
-            return "Failed"
+            return render_template("status.html",status="傻子")
+
+    return render_template("status.html", status="傻子")
+
+
 
 
 if __name__ == '__main__':

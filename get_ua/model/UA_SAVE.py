@@ -14,6 +14,7 @@ class UaSave(Base):
     __tablename__ = 'ua_save'
     id = Column(INT, primary_key=True, autoincrement=True, nullable=False, index=True, unique=True)
     ua = Column(VARCHAR(255), nullable=False, default="", unique=True)
+    ip = Column(VARCHAR(255), nullable=False, default="", unique=True)
     update_time = Column(DateTime, server_default=func.now(), nullable=False)
     create_time = Column(DateTime, server_default=func.now(), nullable=False)
 
