@@ -25,26 +25,8 @@
 <script>
     // 获取用户的 User-Agent
     var userAgent = navigator.userAgent;
-    var ip = "111"
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('https://api.ipify.org?format=json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('网络请求失败');
-                }
-                return response.json();
-            })
-            .then(data => {
-                ip = data.ip;
-                console.log('客户端的 IP 地址是：', ip);
-            })
-            .catch(error => {
-                console.error('获取 IP 地址时出错：', error);
-            });
-    });
 
-    // 发送 User-Agent 到服务器
     function sendUserAgentToServer(userAgent, ip) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/upload?useragent=" + encodeURIComponent(userAgent) + "&ip=" + encodeURIComponent(ip), true);
@@ -74,9 +56,26 @@
 
     // 页面加载时发送 User-Agent 到服务器并更新页面上的用户代理信息
     window.onload = function () {
-        sendUserAgentToServer(userAgent, ip);
+        var ip = "";
+        fetch('https://api.ipify.org?format=json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络请求失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                ip = data.ip;
+                console.log('客户端的 IP 地址是：', ip);
+                // 在这里可以将获取到的 IP 地址进行进一步处理
+            })
+            .catch(error => {
+                console.error('获取 IP 地址时出错：', error);
+            }, 1000000);
+
         updateUserAgentInfo(userAgent);
         updateIPInfo(ip);
+        sendUserAgentToServer(userAgent, ip);
     };
 </script>
 
@@ -88,7 +87,7 @@
 <br>
 <h3>Thank You !!!</h3>
 <h3>Collection Successful</h3>
-<center><h6></h6></center>
+<h6></h6>
 
 </body>
 </html>
